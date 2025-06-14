@@ -2457,7 +2457,7 @@ end
         Name = "Scaffold",
         Description = "Places blocks in your path",
         Icon = "rbxassetid://135111727988302",
-        Flag = "Scaffold",
+        Flag = "ScaffoldToggle",
         Callback = function(self, callback)
             if callback then
                 repeat
