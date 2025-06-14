@@ -229,7 +229,7 @@ end
 
 local Hit = GameData.Controllers.Sword.sendServerRequest
 local SwordServerRequestConstants = debug.getconstants(Hit)
-local find = table.find(SwordServerRequestConstants, "Client") -- nil???
+local find = table.find(SwordServerRequestConstants, "Client")
 local HitRemoteName
 if find and SwordServerRequestConstants[find + 1] then
     HitRemoteName = SwordServerRequestConstants[find + 1]
@@ -237,14 +237,14 @@ else
     for i, v in SwordServerRequestConstants do
         if v == "Client" then
             HitRemoteName = SwordServerRequestConstants[i + 1]
-            return
+            break
         end
     end
 
     for _, v in SwordServerRequestConstants do
         if v == "SwordHit" then
             HitRemoteName = v
-            return
+            break
         end
     end
 end
