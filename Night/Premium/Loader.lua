@@ -74,7 +74,7 @@ local Assets = nil
 if getgenv().Night.Dev and isfile("Night/Premium/Init.lua") then
     loadstring(readfile("Night/Premium/Init.lua"))()
 else
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/warprbx/NightRewrite/refs/heads/main/Night/Premium/Init.lua"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/null-wtf/Night/refs/heads/main/Night/Premium/Init.lua"))()
 end
 Assets = getgenv().Night.Assets
 
@@ -172,7 +172,7 @@ if queue_on_teleport then
                 if getgenv().NightInit and getgenv().NightInit.Dev and isfile("Night/Premium/Loader.lua") then
                     loadstring(readfile("Night/Premium/Loader.lua"))()
                 else
-                    loadstring(game:HttpGet("https://raw.githubusercontent.com/warprbx/NightRewrite/refs/heads/main/Night/Premium/Loader.lua"))()
+                    loadstring(game:HttpGet("https://raw.githubusercontent.com/null-wtf/Night/refs/heads/main/Night/Premium/Loader.lua"))()
                 end
             ]]
             queue_on_teleport(str)
