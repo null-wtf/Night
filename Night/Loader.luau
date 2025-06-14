@@ -199,20 +199,20 @@ end]]
 task.wait(0.15)
 
 if not isfile("Night/Version.txt") then
-    writefile("Night/Version.txt", "Current version: 2.1.4")
+    writefile("Night/Version.txt", "Current version: 2.1.5")
     Assets.Notifications.Send({
-        Description = "Night has been updated to V2.1.4",
+        Description = "Night has been updated to V2.1.5",
         Duration = 15
     })
 end
 
 local text = readfile("Night/Version.txt")
-if text ~= "Current version: 2.1.4" then
+if text ~= "Current version: 2.1.5" then
     Assets.Notifications.Send({
-        Description = "Night has been updated to V2.1.4",
+        Description = "Night has been updated to V2.1.5",
         Duration = 15
     })
-    writefile("Night/Version.txt", "Current version: 2.1.4")
+    writefile("Night/Version.txt", "Current version: 2.1.5")
 end
 
 Night.Loaded = true
