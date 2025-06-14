@@ -203,7 +203,7 @@ end
 
 local AutoPlantOptions = {}
 NightTabs.Tabs.World.Functions.NewModule({
-    Name = "Auto Plant",
+    Name = "AutoPlant",
     Description = "Plants crops",
     Icon = "",
     Flag = "AutoPlant",
@@ -246,7 +246,7 @@ NightTabs.Tabs.World.Functions.NewModule({
 })
 
 NightTabs.Tabs.Utility.Functions.NewModule({
-    Name = "Auto Collect",
+    Name = "AutoCollect",
     Description = "Collects grown crops",
     Icon = "",
     Flag = "AutoCollect",
@@ -272,7 +272,7 @@ local AutoBuy = {
 }
 
 AutoBuy.Toggle = NightTabs.Tabs.Utility.Functions.NewModule({
-    Name = "Auto Buy",
+    Name = "AutoBuy",
     Description = "Buys seeds and gear",
     Icon = "",
     Flag = "AutoBuy",
@@ -341,7 +341,7 @@ AutoBuy.Toggle.Functions.Settings.Dropdown({
 
 local SellThreshold = 50
 NightTabs.Tabs.Utility.Functions.NewModule({
-    Name = "Auto Sell",
+    Name = "AutoSell",
     Description = "Sells your inventory",
     Icon = "",
     Flag = "AutoSell",
@@ -372,7 +372,7 @@ NightTabs.Tabs.Utility.Functions.NewModule({
 })
 
 NightTabs.Tabs.Utility.Functions.NewModule({
-    Name = "Auto Water",
+    Name = "AutoWater",
     Description = "Uses your water can to water crops",
     Icon = "",
     Flag = "AutoWater",
