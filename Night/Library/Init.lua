@@ -1187,7 +1187,7 @@ do
 
         local TEXT_SIZE = if Night.Mobile then 16 else 24
         
-        local download = Assets.Font.Download("Product-Sans-Regular", "https://raw.githubusercontent.com/warprbx/NightRewrite/refs/heads/main/Night/Assets/Fonts/Product-Sans-Regular.ttf")
+        local download = Assets.Font.Download("Product-Sans-Regular", "https://github.com/null-wtf/Night/raw/refs/heads/main/Night/Assets/Fonts/Product-Sans-Regular.ttf")
         if not download then
             return 
         end
@@ -1324,11 +1324,13 @@ do
         local function ArrayListRainbow()
             local Speed = Data.RainbowSpeed
             
-            for i, Module in Data.Entries do
-                local Color = Rainbow(Speed - i * 250) 
-                Module.Instance.MainText.TextColor3 = Color
-                Module.Instance.Line.BackgroundColor3 = Color
-            end
+            pcall(function()
+                for i, Module in Data.Entries do
+                    local Color = Rainbow(Speed - i * 250) 
+                    Module.Instance.MainText.TextColor3 = Color
+                    Module.Instance.Line.BackgroundColor3 = Color
+                end
+            end)
         end
 
         function Data.Functions.Toggle(visible: boolean)
@@ -1520,7 +1522,7 @@ do
         local MainFrameScrollPage = Instance.new("ScrollingFrame", PageData.Objects.ActualPage)
         MainFrameScrollPage.AnchorPoint = Vector2.new(0.5, 1)
         MainFrameScrollPage.BackgroundTransparency = 1
-        MainFrameScrollPage.Position = UDim2.new(0.5, 0, 1, 30)
+        MainFrameScrollPage.Position = UDim2.new(0.5, 0, 1, 20)
         MainFrameScrollPage.Size = UDim2.new(1, 0, 0.87, 0)
         MainFrameScrollPage.AutomaticCanvasSize = Enum.AutomaticSize.Y
         MainFrameScrollPage.ScrollBarThickness = 2
@@ -1543,6 +1545,147 @@ do
         ScrollList.VerticalAlignment = Enum.VerticalAlignment.Top
         ScrollList.HorizontalAlignment = Enum.HorizontalAlignment.Center
     
+        if PageData.Name == "Dashboard" then
+            local SearchBar = Instance.new("Frame", MainFrameScrollPage)
+            SearchBar.BackgroundTransparency = 0.7
+            SearchBar.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+            SearchBar.Size = UDim2.new(1, 0, 0, 40)
+            SearchBar.LayoutOrder = -1000
+            Instance.new("UICorner", SearchBar).CornerRadius = UDim.new(0, 15)
+
+            local SearchBarFocusGradient = Instance.new("UIGradient", SearchBar)
+            SearchBarFocusGradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0, Color3.fromRGB(29, 59, 95)), ColorSequenceKeypoint.new(1, Color3.fromRGB(81, 32, 124))}
+            SearchBarFocusGradient.Offset = Vector2.new(-0.5, 0)
+            SearchBarFocusGradient.Enabled = false
+
+            local SearchBarPadding = Instance.new("UIPadding", SearchBar)
+            SearchBarPadding.PaddingLeft = UDim.new(0, 40)
+
+            local SearchBarDepth = Instance.new("ImageLabel", SearchBar)
+            SearchBarDepth.AnchorPoint = Vector2.new(0, 0.5)
+            SearchBarDepth.BackgroundTransparency = 1
+            SearchBarDepth.Position = UDim2.new(0, -40, 0.5, 0)
+            SearchBarDepth.Size = UDim2.new(1, 40, 1, 0)
+            SearchBarDepth.Image = "rbxassetid://16264857615"
+            SearchBarDepth.ImageColor3 = Color3.fromRGB(255, 255, 255)
+            SearchBarDepth.ScaleType = Enum.ScaleType.Slice
+            SearchBarDepth.SliceCenter = Rect.new(206, 206, 206, 206)
+
+            local MainSearchBarTextBox = Instance.new("TextBox", SearchBar)
+            MainSearchBarTextBox.BackgroundTransparency = 1
+            MainSearchBarTextBox.Position = UDim2.fromOffset(0, -1)
+            MainSearchBarTextBox.Size = UDim2.new(1, -50, 1, 0)
+            MainSearchBarTextBox.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Regular)
+            MainSearchBarTextBox.PlaceholderColor3 = Color3.fromRGB(175, 175, 175)
+            MainSearchBarTextBox.PlaceholderText = "Module Search..."
+            MainSearchBarTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+            MainSearchBarTextBox.TextSize = 16
+            MainSearchBarTextBox.TextTransparency = 0.2
+            MainSearchBarTextBox.TextXAlignment = Enum.TextXAlignment.Left
+            MainSearchBarTextBox.Text = ""
+            MainSearchBarTextBox.ClearTextOnFocus = false
+
+            local SearchBarIcon = Instance.new("ImageLabel", SearchBar)
+            SearchBarIcon.AnchorPoint = Vector2.new(0, 0.5)
+            SearchBarIcon.BackgroundTransparency = 1
+            SearchBarIcon.Position = UDim2.new(0, -25, 0.5, 0)
+            SearchBarIcon.Size = UDim2.fromOffset(17, 17)
+            SearchBarIcon.Image = "rbxassetid://11293977875"
+            SearchBarIcon.ImageColor3 = Color3.fromRGB(255, 255, 255)
+            SearchBarIcon.ImageTransparency = 0.5
+            SearchBarIcon.ScaleType = Enum.ScaleType.Fit
+
+            local SearchBarClear = Instance.new("ImageButton", SearchBar)
+            SearchBarClear.AnchorPoint = Vector2.new(1, 0.5)
+            SearchBarClear.BackgroundTransparency = 1
+            SearchBarClear.Position = UDim2.fromScale(1, 0.5)
+            SearchBarClear.Size = UDim2.fromOffset(40, 40)
+            SearchBarClear.AutoButtonColor = false
+
+            local SearchBarClearIcon = Instance.new("ImageLabel", SearchBarClear)
+            SearchBarClearIcon.AnchorPoint = Vector2.new(0.5, 0.5)
+            SearchBarClearIcon.BackgroundTransparency = 1
+            SearchBarClearIcon.Position = UDim2.fromScale(0.5, 0.5)
+            SearchBarClearIcon.Size = UDim2.fromOffset(14, 14)
+            SearchBarClearIcon.Image = "rbxassetid://11293981586"
+            SearchBarClearIcon.ImageColor3 = Color3.fromRGB(255, 255, 255)
+            SearchBarClearIcon.ImageTransparency = 0.5
+            SearchBarClearIcon.ScaleType = Enum.ScaleType.Fit
+
+            local SearchBarClearScale = Instance.new("UIScale", SearchBarClearIcon)
+            SearchBarClearScale.Scale = 0
+
+            local function GetAllTabButtons() : {TextButton}
+                local Buttons = {}
+                for i,v : TextButton in MainFrameScrollPage:GetChildren() do
+                    if v:IsA("TextButton") then
+                        table.insert(Buttons, v)
+                    end
+                end
+                return Buttons
+            end
+
+            local SearchTween
+            local function Search(Text: string)
+                MainSearchBarTextBox.Text = Text
+
+                local Modules = Assets.Functions.GetAllModules()
+                local Buttons = GetAllTabButtons()
+                if Modules and Buttons then
+                    local CheckText = Text:gsub(" ", "") 
+                    if CheckText ~= "" then
+                        TweenService:Create(SearchBarClearScale, TweenInfo.new(0.1), {Scale = 1}):Play()
+                    else
+                        TweenService:Create(SearchBarClearScale, TweenInfo.new(0.3), {Scale = 0}):Play()
+                    end
+
+                    TweenService:Create(SearchBar, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(0,0,0), BackgroundTransparency = 0.7}):Play()
+                    task.delay(0.3, function()
+                        SearchBarFocusGradient.Enabled = false
+                    end)
+
+                    for i : number,v : TextButton in Buttons do
+                        v.Visible = CheckText == ""
+                    end
+
+                    for i : string, v in Modules do
+                        if i and typeof(i) == "string" and v and typeof(v) == "table" then
+                            if i:lower():find(Text:lower()) and v.Tab then
+                                if CheckText ~= "" then
+                                    v.Tab.Objects.DashBoardButton.Visible = true
+                                    v.Tab.Functions.Search(Text:lower())
+                                else
+                                    v.Tab.Functions.Search("")
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+
+            table.insert(Night.Connections, MainSearchBarTextBox.Focused:Connect(function()  
+                SearchBarFocusGradient.Enabled = true
+                SearchTween = TweenService:Create(SearchBarFocusGradient, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, math.huge, true), {Offset = Vector2.new(.5, 0)})
+                SearchTween:Play()
+    
+                TweenService:Create(SearchBar, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(255,255,255), BackgroundTransparency = 0}):Play()
+            end))
+
+            table.insert(Night.Connections, MainSearchBarTextBox.FocusLost:Connect(function()  
+                Search(MainSearchBarTextBox.Text)
+                task.delay(0.3, function()
+                    if SearchTween then
+                        SearchTween:Cancel()
+                    end
+                end)
+            end))
+
+            table.insert(Night.Connections, SearchBarClear.MouseButton1Click:Connect(function()
+                Search("")
+                TweenService:Create(SearchBarClearScale, TweenInfo.new(0.1), {Scale = 0}):Play()
+            end))
+        end
+
         table.insert(Night.Connections, PageData.Objects.PageselectorButton.MouseEnter:Connect(function()
             TweenService:Create(PageData.Objects.PageselectorButton, TweenInfo.new(0.1), {BackgroundTransparency = 0.8}):Play()
             TweenService:Create(PageSelectorButtonIconScale, TweenInfo.new(0.1), {Scale = 1.4}):Play()
@@ -2161,7 +2304,8 @@ do
             end)
         end
 
-        tab.Functions.Search = function(result)
+        tab.Functions.Search = function(result : string)
+            MainSearchBarTextBox.Text = result
             for i,v in tab.Modules do
                 if result == "" then
                     v.Objects.Module.Visible = true
@@ -2204,7 +2348,6 @@ do
         table.insert(Night.Connections, tabclosebuttoncon)
 
         local searchclearcon =  SearchBarClear.MouseButton1Click:Connect(function()
-            MainSearchBarTextBox.Text = ""
             tab.Functions.Search("")
             TweenService:Create(SearchBarClearScale, TweenInfo.new(0.1), {Scale = 0}):Play()
         end)
@@ -2251,6 +2394,7 @@ do
                 Settings = {},
                 Objects = {},
                 Connections = {},
+                Tab = tab,
                 Functions = {Toggle = nil, Settings = {}},
             }
 
@@ -4218,6 +4362,10 @@ do
                 table.clear(ModuleData)
             end
 
+            setmetatable(ModuleData, {
+                __index = ModuleData.Data
+            })
+
             tab.Modules[ModuleData.Flag] = ModuleData
             return ModuleData
         end
@@ -4457,11 +4605,11 @@ do
         for i,v in Night.Tabs.Tabs do
             if v.Modules then
                 for i2,v2 in v.Modules do
+                    if v2 and v2.Data and v2.Data.Enabled then
+                        v2.Data.Enabled = false
+                    end
                     if v2 and v2.Callback then
                         v2.Callback(v2, false)
-                        if v2.Data and v2.Data.Enabled then
-                            v2.Data.Enabled = false
-                        end
                     end
                 end
             end
@@ -4635,11 +4783,11 @@ do
             end})
 
 
-            Assets.Functions.LoadFile("Night/Games/"..file..".lua", "https://raw.githubusercontent.com/warprbx/NightRewrite/refs/heads/main/Night/Games/"..file..".lua")
+            Assets.Functions.LoadFile("Night/Games/"..file..".lua", "https://raw.githubusercontent.com/null-wtf/Night/refs/heads/main/Night/Games/"..file..".lua")
             Assets.Config.Load(file, "Game")
             return {Background = Night.Background, Dashboard = Night.Dashboard, Settings = Settings}
         else
-            Assets.Functions.LoadFile("Night/Games/"..file..".lua", "https://raw.githubusercontent.com/warprbx/NightRewrite/refs/heads/main/Night/Games/"..file..".lua")
+            Assets.Functions.LoadFile("Night/Games/"..file..".lua", "https://raw.githubusercontent.com/null-wtf/Night/refs/heads/main/Night/Games/"..file..".lua")
             Assets.Config.Load(Night.GameSave, "Game")
             return {Background = Night.Background, Dashboard = Night.Dashboard}
         end
@@ -4647,12 +4795,13 @@ do
 
 
 
-
-    local ToggleTweens = {}
+    local RunningTweens = {}
     local Restore = {}
-    local IsToggleAnimating = false
-    Assets.Main.ToggleVisibility = function(visible)
+    local Open = false
+    Assets.Main.ToggleVisibility = function(visible: boolean)
         do
+            Open = visible
+
             if not Night.Config.UI.Anim then
                 Night.Background.Objects.MainFrame.Visible = visible
                 if visible then
@@ -4664,61 +4813,48 @@ do
                 return
             end
 
-            if IsToggleAnimating then repeat task.wait() until not IsToggleAnimating end
-            IsToggleAnimating = true
-
-            local tweenInfo = TweenInfo.new(0.8, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
-            if visible then
-                if not Night.Background.Objects.MainFrame.Visible then  
-                    if Night.Mobile then
-                        Night.Background.Objects.ToggleButton.Visible = false
-                    end
-                    Night.Background.Objects.MainFrame.Visible = true
-                    Night.Background.Objects.DropShadow.Visible = true
-                    
-                    Night.Background.Objects.MainFrame.BackgroundTransparency = 1
-                    Night.Background.Objects.MainFrame.ImageTransparency = 1
-                    Night.Background.Objects.MainFrameScale.Scale = 1.2
-                    Night.Background.Objects.WindowControls.GroupTransparency = 1
-
-
-                    table.insert(ToggleTweens, TweenService:Create(Night.Background.Objects.MainFrame, tweenInfo, {BackgroundTransparency = 0.1, ImageTransparency = 0.8}))
-                    table.insert(ToggleTweens, TweenService:Create(Night.Background.Objects.WindowControls, tweenInfo, {GroupTransparency = 0.4}))
-                    table.insert(ToggleTweens, TweenService:Create(Night.Background.Objects.MainFrameScale, tweenInfo, {Scale = 1}))
-
-                    for i,v in Restore do
-                        v.Visible = true
-                    end
-                    for i,v in Night.Pages do
-                        if v.Objects and v.Objects.ActualPage and v.Selected then
-                            v.Objects.ActualPage.Visible = true
-                        end
-                    end
-                    table.clear(Restore)
-
-                    local completedTweens = 0
-                    for i,v in ToggleTweens do
-                        v:Play()
-                        v.Completed:Connect(function()
-                            completedTweens += 1
-                            if completedTweens == #ToggleTweens then
-                                IsToggleAnimating = false
-                            end
-                        end)
-                    end
-                    if Night.CurrentOpenTab then
-                        for i,v in Night.CurrentOpenTab do
-                            if v.Functions then
-                                task.wait(0.015)
-                                v.Functions.ToggleTab(true, true, true)
-                            end
-                        end
-                    end
-
-                else
-                    IsToggleAnimating = false
+            if #RunningTweens > 0 then
+                for i,v in RunningTweens do 
+                    v:Cancel()
+                    table.clear(RunningTweens)
                 end
+            end
+        
+            if visible then
+                if Night.Mobile then
+                    Night.Background.Objects.ToggleButton.Visible = false
+                end
+                Night.Background.Objects.MainFrame.Visible = true
+                Night.Background.Objects.DropShadow.Visible = true
+                
+                Night.Background.Objects.MainFrame.BackgroundTransparency = 1
+                Night.Background.Objects.MainFrame.ImageTransparency = 1
+                Night.Background.Objects.MainFrameScale.Scale = 1
+                Night.Background.Objects.WindowControls.GroupTransparency = 1
 
+                table.insert(RunningTweens, TweenService:Create(Night.Background.Objects.MainFrame, TweenInfo.new(1.2, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {BackgroundTransparency = 0.1, ImageTransparency = 0.8}))
+                table.insert(RunningTweens, TweenService:Create(Night.Background.Objects.WindowControls, TweenInfo.new(0.8, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {GroupTransparency = 0.4}))
+
+                for i,v in RunningTweens do v:Play() end
+
+                for i,v in Restore do
+                    v.Visible = true
+                end
+                for i,v in Night.Pages do
+                    if v.Objects and v.Objects.ActualPage and v.Selected then
+                        v.Objects.ActualPage.Visible = true
+                    end
+                end
+                table.clear(Restore)
+
+                if Night.CurrentOpenTab then
+                    for i,v in Night.CurrentOpenTab do
+                        if v.Functions then
+                            task.wait(0.015)
+                            v.Functions.ToggleTab(true, true, true)
+                        end
+                    end
+                end
             else
                 if Night.Notifications.Active.discordnoti then
                     Night.Notifications.Active.discordnoti.Functions.Remove(true)
@@ -4735,14 +4871,20 @@ do
                     end
                 end
 
-                table.insert(ToggleTweens, TweenService:Create(Night.Background.Objects.MainFrame, tweenInfo, {BackgroundTransparency = 1, ImageTransparency = 1}))
-                table.insert(ToggleTweens, TweenService:Create(Night.Background.Objects.WindowControls, tweenInfo, {GroupTransparency = 1}))
-                table.insert(ToggleTweens, TweenService:Create(Night.Background.Objects.MainFrameScale, tweenInfo, {Scale = 1.2}))
+                if Night.Tabs.TabBackground.Visible then
+                    Night.Tabs.TabBackground.Visible = false
+                end
+
+                table.insert(RunningTweens, TweenService:Create(Night.Background.Objects.MainFrame, TweenInfo.new(1.2, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {BackgroundTransparency = 1, ImageTransparency = 1}))
+                table.insert(RunningTweens, TweenService:Create(Night.Background.Objects.WindowControls, TweenInfo.new(0.8, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {GroupTransparency = 1}))
+
+                for i,v in RunningTweens do v:Play() end
 
                 if Night.Pageselector.Objects.Pageselector.Visible then
                     Night.Pageselector.Objects.Pageselector.Visible = false
                     table.insert(Restore, Night.Pageselector.Objects.Pageselector)
                 end
+
                 Night.Background.Objects.NavigationButtons.Visible = false
                 table.insert(Restore, Night.Background.Objects.NavigationButtons)
                 Night.Background.Objects.WindowControls.Visible = false
@@ -4753,21 +4895,12 @@ do
                         v.Objects.ActualPage.Visible = false
                     end
                 end
+
                 Night.Background.Objects.DropShadow.Visible = false
 
-                local completedTweens = 0
-                for i,v in ToggleTweens do
-                    v:Play()
-                    v.Completed:Connect(function()
-                        completedTweens += 1
-                        if completedTweens == #ToggleTweens then
-                            IsToggleAnimating = false
-                        end
-                    end)
-                end
-
-                task.wait(0.5)
-                Night.Background.Objects.MainFrame.Visible = false
+                task.delay(0.8, function()
+                    Night.Background.Objects.MainFrame.Visible = Open
+                end)
             end
         end
     end
