@@ -20,6 +20,7 @@ local TweenService = Assets.Functions.cloneref(game:GetService("TweenService")) 
 local UserInputService = Assets.Functions.cloneref(game:GetService("UserInputService")) :: UserInputService
 local Workspace = Assets.Functions.cloneref(game:GetService("Workspace")) :: Workspace
 local TextService = Assets.Functions.cloneref(game:GetService("TextService")) :: TextService
+local RunService = Assets.Functions.cloneref(game:GetService("RunService")) :: RunService
 
 local UserCamera = Workspace.CurrentCamera :: Camera
 local LocalPlayer = PlayersSV.LocalPlayer :: Player
@@ -1345,7 +1346,7 @@ do
                 end
             else
                 if not Data.Connections.Rainbow then
-                    local r = game:GetService("RunService").RenderStepped:Connect(ArrayListRainbow)
+                    local r = RunService.RenderStepped:Connect(ArrayListRainbow)
                     table.insert(Data.Connections, r)
                     table.insert(Night.Connections, r)
                 end
