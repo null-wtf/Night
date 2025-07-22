@@ -1,16 +1,13 @@
+if getgenv().Night then
+    return error("Night is already loaded")
+end
 
 if not game:IsLoaded() then
     game.Loaded:Wait()
 end
 
-local NightInit = getgenv().NightInit :: {}
-
-if getgenv().Night then
-    return error("Night is already loaded.")
-end
-
-local Night = {
-    Version = "",
+getgenv().Night = {
+    Premium = true,
     Dev = false,
     Connections = {},
     Pages = {},
@@ -52,179 +49,173 @@ local Night = {
             ModuleKeybinds = {},
             Other = {}
         },
-    },
-    Directories = {
-        "Night",
-        "Night/Config",
-        "Night/Assets",
-        "Night/Assets/Fonts"
     }
-}
-
-for i,v: string in Night.Directories do 
-    if not isfolder(v) then
-        makefolder(v)
+} 
+if getgenv().NightInit then
+    if getgenv().NightInit.GameSave then
+        getgenv().Night.GameSave = getgenv().NightInit.GameSave
     end
-end
-
-if NightInit then
-    for i,v in NightInit do
-        Night[i] = v 
+    if getgenv().NightInit.CheckOtherConfig then
+        getgenv().Night.CheckOtherConfig = getgenv().NightInit.CheckOtherConfig
     end
-
-    Night.InitSave = NightInit
+    if getgenv().NightInit.Dev then
+        getgenv().Night.Dev = true
+    end
+    if getgenv().NightInit.ShowAuthTime then
+        getgenv().Night.ShowAuthTime = true
+    end
+    getgenv().Night.InitSave = getgenv().NightInit
     getgenv().NightInit = nil
 end
 
-if Night.Premium then
-    if Night.Dev and isfile("Night/Premium/Init.lua") then
-        loadstring(readfile("Night/Premium/Init.lua"))()
-    else
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/null-wtf/Night/refs/heads/main/Night/Premium/Init.lua"))()
-    end
-else
-    if Night.Dev and isfile("Night/Library/Init.lua") then
-        loadstring(readfile("Night/Library/Init.lua"))()
-    else
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/null-wtf/Night/refs/heads/main/Night/Library/Init.lua"))()
-    end
-end
 
-local Assets = getgenv().Night.Assets
+
+local Assets = nil
+if getgenv().Night.Dev and isfile("Night/Premium/Init.lua") then
+    loadstring(readfile("Night/Premium/Init.lua"))()
+else
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/null-wtf/Night/refs/heads/main/Night/Premium/Init.lua"))()
+end
+Assets = getgenv().Night.Assets
+
 if not Assets or typeof(Assets) ~= "table" or (Assets and not Assets.Functions) then
-    table.clear(Night)
+    getgenv().Night = nil
     return warn("Failed to load Functions, Night uninjected")
 end
 
-local UserInputService = Assets.Functions.cloneref(game:GetService("UserInputService")) :: UserInputService
-local Workspace = Assets.Functions.cloneref(game:GetService("Workspace")) :: Workspace
-local Players = Assets.Functions.cloneref(game:GetService("Players")) :: Players
-local Camera = Workspace:FindFirstChildWhichIsA("Camera") :: Camera
+local uis = Assets.Functions.cloneref(game:GetService("UserInputService")) :: UserInputService
+local ws = Assets.Functions.cloneref(game:GetService("Workspace")) :: Workspace
+local plrs = Assets.Functions.cloneref(game:GetService("Players")) :: Players
 
-if not UserInputService.KeyboardEnabled and UserInputService.TouchEnabled then
-    Night.Mobile = true
-    Night.Config.UI.Size = {X = 0.7, Y = 0.9}
+local currentCamera = ws:FindFirstChildWhichIsA("Camera") :: Camera
+
+if not uis.KeyboardEnabled and uis.TouchEnabled then
+    getgenv().Night.Mobile = true
+    getgenv().Night.Config.UI.Size = {X = 0.7, Y = 0.9}
 end
 
-local GameData = Assets.Functions.GetGameInfo()
-local UIConfig = Assets.Config.Load("UI", "UI")
-local GameConfig = Assets.Config.Load(tostring(Night.GameSave), "Game")
 
-if typeof(GameData) == "table" then
-    Night.GameRootId = GameData.rootPlaceId 
-    if Night.GameSave == "root" then
-        Night.GameSave = tostring(Night.GameRootId)
+if not isfolder("Night") then
+    makefolder("Night")
+end
+if not isfolder("Night/Config") then
+    makefolder("Night/Config")
+end 
+if not isfolder("Night/Assets") then
+    makefolder("Night/Assets")
+end
+if not isfolder("Night/Assets/Fonts") then
+    makefolder("Night/Assets/Fonts")
+end
+
+local gameinfo = Assets.Functions.GetGameInfo()
+if typeof(gameinfo) == "table" then
+    getgenv().Night.GameRootId = gameinfo.rootPlaceId 
+    if getgenv().Night.GameSave == "root" then
+        getgenv().Night.GameSave = tostring(getgenv().Night.GameRootId)
     end
 end
 
-if UIConfig == "no file" then
-    Assets.Config.Save("UI", Night.Config.UI)
+
+local UI = Assets.Config.Load("UI", "UI")
+local gamesave = Assets.Config.Load(tostring(getgenv().Night.GameSave), "Game")
+if UI == "no file" then
+    Assets.Config.Save("UI", getgenv().Night.Config.UI)
 end
 
-if GameConfig == "no file" and Night.CheckOtherConfig then
-    if Night.GameRootId == Night.GameSave then
-        GameConfig = Assets.Config.Load(tostring(game.PlaceId), "Game")
+if gamesave == "no file" and getgenv().Night.CheckOtherConfig then
+    if getgenv().Night.GameRootId == getgenv().Night.GameSave then
+        gamesave = Assets.Config.Load(tostring(game.PlaceId), "Game")
     else
-        GameConfig = Assets.Config.Load(tostring(Night.GameRootId), "Game")
+        gamesave = Assets.Config.Load(tostring(getgenv().Night.GameRootId), "Game")
     end
 end
 
-if GameConfig == "no file" then
-    Assets.Config.Save(tostring(Night.GameSave), getgenv().Night.Config.Game)
+if gamesave == "no file" then
+    Assets.Config.Save(tostring(getgenv().Night.GameSave), getgenv().Night.Config.Game)
 end
 
-Assets.Main.Load("Universal")
-Assets.Main.Load(getgenv().Night.GameSave)
-Assets.Main.ToggleVisibility(true)
+if getgenv().Night.Mobile then
+    if currentCamera then
+        if 0.4 >= (currentCamera.ViewportSize.X / 1000) - 0.1 then
+            getgenv().Night.Config.UI.Scale = 0.4
+        else
+            getgenv().Night.Config.UI.Scale = (currentCamera.ViewportSize.X / 1000) - 0.1
+        end
+    end
+end
 
 if queue_on_teleport then
-    table.insert(Night.Connections, Players.LocalPlayer.OnTeleport:Connect(function(state)
-        if not Night.Teleporting then
-            Night.Teleporting = true
-            
-            local TeleportData = ""
-            if Night.InitSave then
-                TeleportData = "getgenv().NightInit = {"
-                for i, v in Night.InitSave do
-                    if i ~= #Night.InitSave then
+    table.insert(getgenv().Night.Connections, plrs.LocalPlayer.OnTeleport:Connect(function(state)
+        if not getgenv().Night.Teleporting then
+            getgenv().Night.Teleporting = true
+
+            local str = ""
+            if getgenv().Night.InitSave then
+                str = "getgenv().NightInit = {"
+                for i, v in getgenv().Night.InitSave do
+                    if i ~= #getgenv().Night.InitSave then
                         if typeof(v) == "string" then
-                            TeleportData = TeleportData..tostring(i)..' = "'..tostring(v)..'" , '
+                            str = str..tostring(i)..' = "'..tostring(v)..'" , '
                         else
-                            TeleportData = TeleportData..tostring(i).." = "..tostring(v).." , "
+                            str = str..tostring(i).." = "..tostring(v).." , "
                         end
                     end
                 end
-
-                TeleportData = string.sub(TeleportData, 0, #TeleportData-2).."}\n"
+                str = string.sub(str, 0, #str-2).."}\n"
             end
 
-            if Night.Premium then
-                TeleportData = TeleportData..[[
-                    if not game:IsLoaded() then
-                        game.Loaded:Wait()
-                    end
-
-                    if getgenv().NightInit and getgenv().NightInit.Dev and isfile("Night/Premium/Loader.lua") then
-                        loadstring(readfile("Night/Premium/Loader.lua"))()
-                    else
-                        loadstring(game:HttpGet("https://raw.githubusercontent.com/null-wtf/Night/refs/heads/main/Night/Premium/Loader.lua"))()
-                    end
-                ]]
-            else
-                TeleportData = TeleportData..[[
-                    if not game:IsLoaded() then
-                        game.Loaded:Wait()
-                    end
-
-                    if getgenv().NightInit and getgenv().NightInit.Dev and isfile("Night/Loader.lua") then
-                        loadstring(readfile("Night/Loader.lua"))()
-                    else
-                        loadstring(game:HttpGet("https://raw.githubusercontent.com/null-wtf/Night/refs/heads/main/Night/Loader.luau"))()
-                    end
-                ]]
-            end
-
-            queue_on_teleport(TeleportData)
+            str = str..[[
+                if not game:IsLoaded() then
+                    game.Loaded:Wait()
+                end
+                if getgenv().NightInit and getgenv().NightInit.Dev and isfile("Night/Premium/Loader.lua") then
+                    loadstring(readfile("Night/Premium/Loader.lua"))()
+                else
+                    loadstring(game:HttpGet("https://raw.githubusercontent.com/null-wtf/Night/refs/heads/main/Night/Premium/Loader.lua"))()
+                end
+            ]]
+            queue_on_teleport(str)
         end
     end))
 end
 
-if Night.Mobile then
-    if Camera then
-        if 0.4 >= (Camera.ViewportSize.X / 1000) - 0.1 then
-            Night.Config.UI.Scale = 0.4
-        else
-            Night.Config.UI.Scale = (Camera.ViewportSize.X / 1000) - 0.1
-        end
-    end
-end
+Assets.Main.Load("Universal")
+Assets.Main.Load(getgenv().Night.GameSave)
 
-Night.Main = Assets.Main
-Night.LoadTime = os.clock() - Night.Load
+Assets.Main.ToggleVisibility(true)
+
+getgenv().Night.Main = Assets.Main
+getgenv().Night.LoadTime = os.clock() - getgenv().Night.Load
 Assets.Notifications.Send({
     Description = "Loaded in " .. string.format("%.1f", getgenv().Night.LoadTime) .. " seconds",
     Duration = 5
 })
+--[[if getgenv().Night.Mobile or getgenv().Night.Config.UI.ToggleKeyCode and getgenv().Night.Config.UI.ToggleKeyCode ~= "" and getgenv().Night.Config.UI.ToggleKeyCode ~= "Unknown" then
+    task.wait(0.5)
+    Assets.Notifications.Send({
+        Description = "Current Keybind is: " .. getgenv().Night.Config.UI.ToggleKeyCode,
+        Duration = 5
+    })
+end]]
+task.wait(0.15)
 
-task.delay(0.2, function()
-    if not isfile("Night/Version.txt") then
-        writefile("Night/Version.txt", "Current version: " .. Night.Version)
-        Assets.Notifications.Send({
-            Description = "Night has been updated to " .. Night.Version,
-            Duration = 15
-        })
-    else
-        local BuildData = readfile("Night/Version.txt")
-        if BuildData ~= "Current version: " .. Night.Version then
-            Assets.Notifications.Send({
-                Description = "Night has been updated to " .. Night.Version,
-                Duration = 15
-            })
-            writefile("Night/Version.txt", "Current version: " .. Night.Version)
-        end
-    end
-end)
+if not isfile("Night/Version.txt") then
+    writefile("Night/Version.txt", "Current version: 2.1.5")
+    Assets.Notifications.Send({
+        Description = "Night has been updated to V2.1.5",
+        Duration = 15
+    })
+end
+
+local text = readfile("Night/Version.txt")
+if text ~= "Current version: 2.1.5" then
+    Assets.Notifications.Send({
+        Description = "Night has been updated to V2.1.5",
+        Duration = 15
+    })
+    writefile("Night/Version.txt", "Current version: 2.1.5")
+end
 
 Night.Loaded = true
-getgenv().Night = Night
 return Assets.Main
