@@ -10,7 +10,7 @@ if getgenv().Night then
 end
 
 local Night = {
-    Version = "",
+    Version = "V3.02",
     Dev = false,
     Connections = {},
     Pages = {},
@@ -229,3 +229,4 @@ end)
 
 Night.Loaded = true
 return Assets.Main
+
